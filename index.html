@@ -258,7 +258,9 @@
                     document.getElementById('artistName').textContent = meta[0];
                     document.getElementById('time').textContent = '0:00 / 0:00';
                     audio.src = meta[2];
-                    audio.play();
+                    audio.play().catch(error => {
+                        console.error("Playback failed:", error);
+                    });
                     isPlaying = true;
                     updateProgress();
                     updateLikeIcon(); // Update the like icon when a song is loaded
@@ -267,7 +269,9 @@
 
         function togglePlay() {
             if (audio.paused) {
-                audio.play();
+                audio.play().catch(error => {
+                    console.error("Playback failed:", error);
+                });
                 isPlaying = true;
             } else {
                 audio.pause();
@@ -359,7 +363,9 @@
         audio.onended = nextSong;
 
         window.addEventListener('load', () => {
-            loadSong(playlist[0]);
+            document.getElementById('playBtn').addEventListener('click', () => {
+                loadSong(playlist[0]);
+            });
             updateLikedSongs();
         });
 
