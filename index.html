@@ -149,7 +149,6 @@
             background: #55FF55;
         }
 
-        /* Popup styles */
         #volumePopup {
             display: none;
             position: absolute;
@@ -158,38 +157,38 @@
             padding: 20px;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
             z-index: 2;
-            width: 300px; /* Set a fixed width for the popup */
-            left: 50%; /* Center the popup */
+            width: 300px;
+            left: 50%;
             top: 50%;
-            transform: translate(-50%, -50%) scale(0); /* Start hidden */
-            transition: transform 0.3s ease; /* Animation for showing */
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.3s ease;
         }
 
         #volumePopup.show {
-            transform: translate(-50%, -50%) scale(1); /* Show with scale */
+            transform: translate(-50%, -50%) scale(1);
         }
 
         #volumePopup h3 {
-            color: #55FF55; /* Change the title color */
+            color: #55FF55;
             margin-bottom: 15px;
         }
 
         #volumePopup input {
             width: 100%;
-            margin: 10px 0; /* Add margin for spacing */
+            margin: 10px 0;
         }
 
         #volumePopup button {
-            background: #55FF55; /* Button background color */
-            color: #000; /* Button text color */
-            border: none; /* Remove border */
-            padding: 10px 20px; /* Add padding */
-            border-radius: 5px; /* Rounded corners */
-            cursor: pointer; /* Pointer cursor */
+            background: #55FF55;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         #volumePopup button:hover {
-            background: rgba(85, 255, 85, 0.8); /* Button hover effect */
+            background: rgba(85, 255, 85, 0.8);
         }
     </style>
 </head>
@@ -224,7 +223,6 @@
             <div class="song-list"></div>
         </div>
 
-        <!-- Volume Popup -->
         <div id="volumePopup">
             <input type="range" id="popupVolume" min="0" max="1" step="0.01" value="1" onchange="setVolume(this.value)">
         </div>
@@ -240,6 +238,7 @@
         let history = [];
         let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
 
+        // Generate a random playlist
         function makePlaylist() {
             const list = new Set();
             while (list.size < numberOfSongs) {
@@ -248,6 +247,7 @@
             return Array.from(list);
         }
 
+        // Load a song by its ID
         function loadSong(songId) {
             currentSong = songId;
             fetch(`${dbPath}/${songId}`)
@@ -263,10 +263,11 @@
                     });
                     isPlaying = true;
                     updateProgress();
-                    updateLikeIcon(); // Update the like icon when a song is loaded
+                    updateLikeIcon();
                 });
         }
 
+        // Toggle play/pause state of the audio
         function togglePlay() {
             if (audio.paused) {
                 audio.play().catch(error => {
@@ -279,6 +280,7 @@
             }
         }
 
+        // Play the previous song in history
         function prevSong() {
             if (history.length > 1) {
                 history.pop();
@@ -287,11 +289,13 @@
             }
         }
 
+        // Play the next song from the playlist
         function nextSong() {
             const nextSong = playlist[Math.floor(Math.random() * playlist.length)];
             loadSong(nextSong);
         }
 
+        // Toggle like status of the current song
         function toggleLike() {
             if (currentSong) {
                 const index = likedSongs.indexOf(currentSong);
@@ -302,10 +306,11 @@
                 }
                 localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
                 updateLikedSongs();
-                updateLikeIcon(); // Update the like icon after toggling
+                updateLikeIcon();
             }
         }
 
+        // Update the like icon based on the current song's like status
         function updateLikeIcon() {
             const likeIcon = document.getElementById('likeIcon');
             if (likedSongs.includes(currentSong)) {
@@ -317,6 +322,7 @@
             }
         }
 
+        // Update the list of liked songs displayed
         function updateLikedSongs() {
             const list = document.querySelector('#likedSongs .song-list');
             list.innerHTML = '';
@@ -327,25 +333,28 @@
                         const meta = data.split('\n\n');
                         const item = document.createElement('div');
                         item.className = 'song-item';
-                        item.textContent = "گۆرانی " + meta[1] + " - " + meta[0]; // Show song name instead of ID
+                        item.textContent = "گۆرانی " + meta[1] + " - " + meta[0];
                         item.onclick = () => loadSong(songId);
                         list.appendChild(item);
                     });
             });
         }
 
+        // Update the progress bar and time display
         function updateProgress() {
             const duration = audio.duration;
             const currentTime = audio.currentTime;
-            const percent = duration ? (currentTime / duration) * 100 : 0; // Prevent non-finite value
+            const percent = duration ? (currentTime / duration) * 100 : 0;
             document.getElementById('progress').value = percent;
             document.getElementById('time').textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
         }
 
+        // Set the audio volume
         function setVolume(value) {
             audio.volume = value;
         }
 
+        // Format time in minutes and seconds
         function formatTime(time) {
             const minutes = Math.floor(time / 60);
             const seconds = Math.floor(time % 60);
@@ -354,7 +363,7 @@
 
         document.getElementById('progress').addEventListener('input', (e) => {
             const percent = e.target.value;
-            if (audio.duration) { // Check if duration is finite
+            if (audio.duration) {
                 audio.currentTime = (audio.duration * percent) / 100;
             }
         });
@@ -373,18 +382,19 @@
             updateLikedSongs();
         });
 
+        // Toggle the visibility of the volume popup
         function toggleVolumePopup() {
             const popup = document.getElementById('volumePopup');
             if (popup.style.display === 'block') {
-                popup.style.transform = 'translate(-50%, -50%) scale(0)'; // Hide with scale
+                popup.style.transform = 'translate(-50%, -50%) scale(0)';
                 setTimeout(() => {
                     popup.style.display = 'none';
-                }, 300); // Match the duration of the transition
+                }, 300);
             } else {
                 popup.style.display = 'block';
                 setTimeout(() => {
-                    popup.style.transform = 'translate(-50%, -50%) scale(1)'; // Show with scale
-                }, 10); // Delay to allow display to take effect
+                    popup.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, 10);
             }
         }
     </script>
