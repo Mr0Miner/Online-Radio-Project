@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>ڕادیۆ</title>
+    <title>Radio</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="client/logo.png" type="image/x-icon">
@@ -280,10 +280,50 @@
         #sharePanel button:hover {
             background: rgba(85, 255, 85, 0.8);
         }
+        
+        #languageToggle {
+            position: relative;
+        }
+
+        #languageToggle select {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            text-align: center;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 90px;
+            font-size: 15px;
+            padding: 6px 0px 6px 0px;
+            background-color: #000000;
+            border: 0px solid #C4D1EB;
+            border-radius: 0px;
+            color: #FFFFFF;
+            cursor: pointer;
+            outline: none;
+        }
+
+        #languageToggle select:focus {
+            background: #000000;
+            border: 0px solid #000000;
+            border-radius: 0px;
+        }
+
+        #languageToggle::after {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+            top: 50%;
+            right: 0px;
+            transform: translate(0, -50%);
+            width: 0px;
+            height: 0px;
+            background-color: #FFFFFF;
+            clip-path: polygon(50% 80%, 0 20%, 100% 20%);
+        }
     </style>
 </head>
-<body>
+<body class="night">
     <div class="container">
+        
         <div id="songInfo">
             <h2 id="artistName"></h2>
             <p id="songTitle"></p>
@@ -309,9 +349,17 @@
         </div>
 
         <div id="likedSongs">
-            <h2 style="display: inline;">گۆرانییە دڵخوازەکان</h2>
+            <h2 style="display: inline;" data-lang-en="Liked Songs" data-lang-fa="آهنگ‌های مورد علاقه" data-lang-kr="گۆرانییە دڵخوازەکان">گۆرانییە دڵخوازەکان</h2>
             <button id="shareBtn" onclick="toggleSharePanel()" style="float: right;"><i class="fas fa-share-square"></i></button>
             <div class="song-list"></div>
+        </div>
+
+        <div id="languageToggle" style="position: absolute; top: 20px; right: 20px;">
+            <select id="languageSelect" onchange="switchLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="fa">فارسی</option>
+                <option value="kr">کوردی</option>
+            </select>
         </div>
 
         <div id="volumePopup">
@@ -319,14 +367,14 @@
         </div>
 
         <div id="sharePanel">
-            <button id="closeSharePanel" onclick="toggleSharePanel()" style="">&times;</button>
-            <h3>گۆرانیەکان بڵاوبکەرەوە</h3>
-            <h4>گۆرانی سەیڤ کراو</h4>
+            <button id="closeSharePanel" onclick="toggleSharePanel()">&times;</button>
+            <h3 data-lang-en="Share Songs" data-lang-fa="اشتراک گذاری آهنگ‌ها" data-lang-kr="گۆرانیەکان بڵاوبکەرەوە">گۆرانیەکان بڵاوبکەرەوە</h3>
+            <h4 data-lang-en="Saved Songs" data-lang-fa="آهنگ‌های ذخیره شده" data-lang-kr="گۆرانی سەیڤ کراو">گۆرانی سەیڤ کراو</h4>
             <input type="text" id="shareCode" placeholder="کۆدەکانی هاوبەش" readonly>
-            <button onclick="generateShareCode()">دروستکردنی کۆد</button>
-            <h4>کۆدەکە داخڵ بکە</h4>
+            <button onclick="generateShareCode()" data-lang-en="Generate Code" data-lang-fa="دروست کردن کد" data-lang-kr="دروستکردنی کۆد">دروستکردنی کۆد</button>
+            <h4 data-lang-en="Enter Code" data-lang-fa="کد را وارد کنید" data-lang-kr="کۆدەکە داخڵ بکە">کۆدەکە داخڵ بکە</h4>
             <input type="text" id="enterCode" placeholder="کۆدەکە داخڵ بکە">
-            <button onclick="enterShareCode()">پشتڕاستکردنەوە</button>
+            <button onclick="enterShareCode()" data-lang-en="Confirm" data-lang-fa="تأیید" data-lang-kr="پشتڕاستکردنەوە">پشتڕاستکردنەوە</button>
         </div>
     </div>
 
@@ -537,6 +585,31 @@
                 }, 10);
             }
         }
+
+        // Toggle theme between light and dark
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            document.body.className = isDarkTheme ? 'night' : 'day';
+            document.querySelectorAll('.container').forEach(container => {
+                container.style.background = isDarkTheme ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)';
+            });
+            document.querySelectorAll('.song-item').forEach(item => {
+                item.style.borderColor = isDarkTheme ? '#55FF55' : '#000';
+            });
+        }
+
+        // Language switcher
+        function switchLanguage(lang) {
+            const elements = document.querySelectorAll('[data-lang-' + lang + ']');
+            elements.forEach(element => {
+                element.textContent = element.getAttribute('data-lang-' + lang);
+            });
+        }
+
+        // Example of switching language on load
+        window.addEventListener('load', () => {
+            switchLanguage('kr'); // Default to English
+        });
     </script>
 </body>
 </html>
