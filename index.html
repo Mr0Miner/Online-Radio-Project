@@ -190,6 +190,96 @@
         #volumePopup button:hover {
             background: rgba(85, 255, 85, 0.8);
         }
+
+        #shareBtn {
+            background: none;
+            color: #55FF55;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #shareBtn:hover {
+            transform: scale(1.2);
+        }
+
+        #sharePanel {
+            display: none;
+            position: fixed;
+            background: rgba(0, 0, 0, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            z-index: 3;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.3s ease;
+            width: 350px;
+        }
+
+        #sharePanel.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        #sharePanel h3 {
+            color: #55FF55;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        #sharePanel h4 {
+            margin-bottom: 0px;
+        }
+
+        #shareCode {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #55FF55;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        #enterCode {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #55FF55;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        #sharePanel button {
+            background: #55FF55;
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        #sharePanel #closeSharePanel {
+            position: absolute;
+            top: 10px; 
+            right: 10px; 
+            background: none; 
+            border: none; 
+            color: #55FF55; 
+            font-size: 30px; 
+            cursor: pointer;
+            padding: 0;
+        }
+
+        #sharePanel button:hover {
+            background: rgba(85, 255, 85, 0.8);
+        }
     </style>
 </head>
 <body>
@@ -214,17 +304,29 @@
         </div>
 
         <div id="progressContainer">
-            <input type="range" id="progress" min="0" max="100" value="0" class="range-slider">
+            <input type="range" id="progress" min="0" max="100" value="0" class="range-slider" disabled>
             <div id="time">0:00 / 0:00</div>
         </div>
 
         <div id="likedSongs">
-            <h2>گۆرانییە دڵخوازەکان</h2>
+            <h2 style="display: inline;">گۆرانییە دڵخوازەکان</h2>
+            <button id="shareBtn" onclick="toggleSharePanel()" style="float: right;"><i class="fas fa-share-square"></i></button>
             <div class="song-list"></div>
         </div>
 
         <div id="volumePopup">
             <input type="range" id="popupVolume" min="0" max="1" step="0.01" value="1" onchange="setVolume(this.value)">
+        </div>
+
+        <div id="sharePanel">
+            <button id="closeSharePanel" onclick="toggleSharePanel()" style="">&times;</button>
+            <h3>گۆرانیەکان بڵاوبکەرەوە</h3>
+            <h4>گۆرانی سەیڤ کراو</h4>
+            <input type="text" id="shareCode" placeholder="کۆدەکانی هاوبەش" readonly>
+            <button onclick="generateShareCode()">دروستکردنی کۆد</button>
+            <h4>کۆدەکە داخڵ بکە</h4>
+            <input type="text" id="enterCode" placeholder="کۆدەکە داخڵ بکە">
+            <button onclick="enterShareCode()">پشتڕاستکردنەوە</button>
         </div>
     </div>
 
@@ -310,6 +412,43 @@
             }
         }
 
+        // Toggle the visibility of the share panel
+        function toggleSharePanel() {
+            const panel = document.getElementById('sharePanel');
+            if (panel.style.display === 'block') {
+                panel.style.transform = 'translate(-50%, -50%) scale(0)';
+                setTimeout(() => {
+                    panel.style.display = 'none';
+                }, 300);
+            } else {
+                panel.style.display = 'block';
+                setTimeout(() => {
+                    panel.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, 10);
+                generateShareCode();
+            }
+        }
+
+        // Generate a share code for liked songs
+        function generateShareCode() {
+            const code = likedSongs.join(',');
+            document.getElementById('shareCode').value = code;
+        }
+
+        // Enter a share code
+        function enterShareCode() {
+            const code = document.getElementById('enterCode').value.trim();
+            if (code) {
+                const songIds = code.split(',').map(id => id.trim());
+                likedSongs = songIds.filter(id => !isNaN(id) && id >= 0 && id < numberOfSongs);
+                localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
+                updateLikedSongs();
+                alert('کد با موفقیت وارد شد!');
+            } else {
+                alert('لطفاً یک کد معتبر وارد کنید!');
+            }
+        }
+
         // Update the like icon based on the current song's like status
         function updateLikeIcon() {
             const likeIcon = document.getElementById('likeIcon');
@@ -347,6 +486,7 @@
             const percent = duration ? (currentTime / duration) * 100 : 0;
             document.getElementById('progress').value = percent;
             document.getElementById('time').textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+            document.getElementById('progress').disabled = false;
         }
 
         // Set the audio volume
