@@ -356,9 +356,9 @@
 
         <div id="languageToggle" style="position: absolute; top: 20px; right: 20px;">
             <select id="languageSelect" onchange="switchLanguage(this.value)">
+                <option value="kr">کوردی</option>
                 <option value="en">English</option>
                 <option value="fa">فارسی</option>
-                <option value="kr">کوردی</option>
             </select>
         </div>
 
@@ -371,6 +371,7 @@
             <h3 data-lang-en="Share Songs" data-lang-fa="اشتراک گذاری آهنگ‌ها" data-lang-kr="گۆرانیەکان بڵاوبکەرەوە">گۆرانیەکان بڵاوبکەرەوە</h3>
             <h4 data-lang-en="Saved Songs" data-lang-fa="آهنگ‌های ذخیره شده" data-lang-kr="گۆرانی سەیڤ کراو">گۆرانی سەیڤ کراو</h4>
             <input type="text" id="shareCode" placeholder="کۆدەکانی هاوبەش" readonly>
+            <button onclick="copyShareCode()" data-lang-en="Copy" data-lang-fa="کپی" data-lang-kr="کۆپی">کۆپی</button>
             <button onclick="generateShareCode()" data-lang-en="Generate Code" data-lang-fa="دروست کردن کد" data-lang-kr="دروستکردنی کۆد">دروستکردنی کۆد</button>
             <h4 data-lang-en="Enter Code" data-lang-fa="کد را وارد کنید" data-lang-kr="کۆدەکە داخڵ بکە">کۆدەکە داخڵ بکە</h4>
             <input type="text" id="enterCode" placeholder="کۆدەکە داخڵ بکە">
@@ -483,12 +484,24 @@
             document.getElementById('shareCode').value = code;
         }
 
+        // Copy the share code to clipboard
+        function copyShareCode() {
+            const shareCodeInput = document.getElementById('shareCode');
+            shareCodeInput.select();
+            document.execCommand('copy');
+            alert('کد کپی شد!');
+        }
+
         // Enter a share code
         function enterShareCode() {
             const code = document.getElementById('enterCode').value.trim();
             if (code) {
                 const songIds = code.split(',').map(id => id.trim());
-                likedSongs = songIds.filter(id => !isNaN(id) && id >= 0 && id < numberOfSongs);
+                songIds.forEach(id => {
+                    if (!isNaN(id) && id >= 0 && id < numberOfSongs && !likedSongs.includes(id)) {
+                        likedSongs.push(id);
+                    }
+                });
                 localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
                 updateLikedSongs();
                 alert('کد با موفقیت وارد شد!');
