@@ -99,16 +99,6 @@
             font-size: 14px;
         }
 
-        #volumeContainer {
-            margin: 20px 0;
-        }
-
-        #volume {
-            width: 100%;
-            border-radius: 4px;
-            accent-color: #55FF55;
-        }
-
         #likedSongs {
             margin-top: 30px;
             padding: 20px;
@@ -233,17 +223,7 @@
             margin-bottom: 0px;
         }
 
-        #shareCode {
-            width: 100%;
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #55FF55;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
-
-        #enterCode {
+        #shareCode, #enterCode {
             width: 100%;
             margin: 10px 0;
             padding: 10px;
@@ -262,7 +242,6 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: bold;
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         }
 
         #sharePanel #closeSharePanel {
@@ -277,10 +256,6 @@
             padding: 0;
         }
 
-        #sharePanel button:hover {
-            background: rgba(85, 255, 85, 0.8);
-        }
-        
         #languageToggle {
             position: relative;
         }
@@ -289,22 +264,14 @@
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             text-align: center;
             appearance: none;
-            -webkit-appearance: none;
             width: 90px;
             font-size: 15px;
-            padding: 6px 0px 6px 0px;
-            background-color: #000000;
-            border: 0px solid #C4D1EB;
-            border-radius: 0px;
+            padding: 6px 0;
+            background-color: #000;
+            border: none;
             color: #FFFFFF;
             cursor: pointer;
             outline: none;
-        }
-
-        #languageToggle select:focus {
-            background: #000000;
-            border: 0px solid #000000;
-            border-radius: 0px;
         }
 
         #languageToggle::after {
@@ -312,18 +279,39 @@
             position: absolute;
             pointer-events: none;
             top: 50%;
-            right: 0px;
+            right: 0;
             transform: translate(0, -50%);
-            width: 0px;
-            height: 0px;
+            width: 0;
+            height: 0;
             background-color: #FFFFFF;
             clip-path: polygon(50% 80%, 0 20%, 100% 20%);
         }
+
+        .notif {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            opacity: 0.9;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 10;
+        }
+
+        .notif[data-lang="fa"], .notif[data-lang="kr"] {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .notif[data-lang="en"] {
+            direction: ltr;
+            text-align: left;
+        }
     </style>
 </head>
-<body class="night">
+<body>
     <div class="container">
-        
         <div id="songInfo">
             <h2 id="artistName"></h2>
             <p id="songTitle"></p>
@@ -372,7 +360,7 @@
             <h4 data-lang-en="Saved Songs" data-lang-fa="آهنگ‌های ذخیره شده" data-lang-kr="گۆرانی سەیڤ کراو">گۆرانی سەیڤ کراو</h4>
             <input type="text" id="shareCode" placeholder="کۆدەکانی هاوبەش" readonly>
             <button onclick="copyShareCode()" data-lang-en="Copy" data-lang-fa="کپی" data-lang-kr="کۆپی">کۆپی</button>
-            <button onclick="generateShareCode()" data-lang-en="Generate Code" data-lang-fa="دروست کردن کد" data-lang-kr="دروستکردنی کۆد">دروستکردنی کۆد</button>
+            <!-- <button onclick="generateShareCode()" data-lang-en="Generate Code" data-lang-fa="دروست کردن کد" data-lang-kr="دروستکردنی کۆد">دروستکردنی کۆد</button> -->
             <h4 data-lang-en="Enter Code" data-lang-fa="کد را وارد کنید" data-lang-kr="کۆدەکە داخڵ بکە">کۆدەکە داخڵ بکە</h4>
             <input type="text" id="enterCode" placeholder="کۆدەکە داخڵ بکە">
             <button onclick="enterShareCode()" data-lang-en="Confirm" data-lang-fa="تأیید" data-lang-kr="پشتڕاستکردنەوە">پشتڕاستکردنەوە</button>
@@ -388,8 +376,8 @@
         let playlist = makePlaylist();
         let history = [];
         let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
+        let selectedLanguage = 'kr'; // Initialize selectedLanguage
 
-        // Generate a random playlist
         function makePlaylist() {
             const list = new Set();
             while (list.size < numberOfSongs) {
@@ -398,7 +386,6 @@
             return Array.from(list);
         }
 
-        // Load a song by its ID
         function loadSong(songId) {
             currentSong = songId;
             fetch(`${dbPath}/${songId}`)
@@ -418,7 +405,6 @@
                 });
         }
 
-        // Toggle play/pause state of the audio
         function togglePlay() {
             if (audio.paused) {
                 audio.play().catch(error => {
@@ -431,7 +417,6 @@
             }
         }
 
-        // Play the previous song in history
         function prevSong() {
             if (history.length > 1) {
                 history.pop();
@@ -440,13 +425,11 @@
             }
         }
 
-        // Play the next song from the playlist
         function nextSong() {
             const nextSong = playlist[Math.floor(Math.random() * playlist.length)];
             loadSong(nextSong);
         }
 
-        // Toggle like status of the current song
         function toggleLike() {
             if (currentSong) {
                 const index = likedSongs.indexOf(currentSong);
@@ -461,7 +444,6 @@
             }
         }
 
-        // Toggle the visibility of the share panel
         function toggleSharePanel() {
             const panel = document.getElementById('sharePanel');
             if (panel.style.display === 'block') {
@@ -478,23 +460,46 @@
             }
         }
 
-        // Generate a share code for liked songs
         function generateShareCode() {
             const code = likedSongs.join(',');
             document.getElementById('shareCode').value = code;
         }
 
-        // Copy the share code to clipboard
         function copyShareCode() {
             const shareCodeInput = document.getElementById('shareCode');
             shareCodeInput.select();
             document.execCommand('copy');
-            alert('کد کپی شد!');
+
+            const copyShareCodeMessages = {
+                kr: "کۆدەکە کۆپی کرا!",
+                en: "Code copied!",
+                fa: "کد کپی شد!"
+            };
+
+            const currentcopyShareCodeMessage = copyShareCodeMessages[selectedLanguage];
+            if (currentcopyShareCodeMessage) {
+                showNotif(currentcopyShareCodeMessage, 'success');
+            }
         }
 
-        // Enter a share code
         function enterShareCode() {
             const code = document.getElementById('enterCode').value.trim();
+
+            const enterShareCodesuccessMessages = {
+                kr: "کۆدەکان بە سەرکەوتوویی داخڵ کرا!",
+                en: "Code entered successfully!",
+                fa: "کد با موفقیت وارد شد!"
+            };
+
+            const enterShareCodeerrorMessages = {
+                kr: "تکایە کۆدێکی دروست بنووسە!",
+                en: "Please enter a valid code!",
+                fa: "لطفاً یک کد معتبر وارد کنید!"
+            };
+
+            const successMessage = enterShareCodesuccessMessages[selectedLanguage];
+            const errorMessage = enterShareCodeerrorMessages[selectedLanguage];
+
             if (code) {
                 const songIds = code.split(',').map(id => id.trim());
                 songIds.forEach(id => {
@@ -504,13 +509,17 @@
                 });
                 localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
                 updateLikedSongs();
-                alert('کد با موفقیت وارد شد!');
+
+                if (successMessage) {
+                    showNotif(successMessage, 'success');
+                }
             } else {
-                alert('لطفاً یک کد معتبر وارد کنید!');
+                if (errorMessage) {
+                    showNotif(errorMessage, 'success');
+                }
             }
         }
 
-        // Update the like icon based on the current song's like status
         function updateLikeIcon() {
             const likeIcon = document.getElementById('likeIcon');
             if (likedSongs.includes(currentSong)) {
@@ -522,7 +531,6 @@
             }
         }
 
-        // Update the list of liked songs displayed
         function updateLikedSongs() {
             const list = document.querySelector('#likedSongs .song-list');
             list.innerHTML = '';
@@ -540,7 +548,6 @@
             });
         }
 
-        // Update the progress bar and time display
         function updateProgress() {
             const duration = audio.duration;
             const currentTime = audio.currentTime;
@@ -550,12 +557,10 @@
             document.getElementById('progress').disabled = false;
         }
 
-        // Set the audio volume
         function setVolume(value) {
             audio.volume = value;
         }
 
-        // Format time in minutes and seconds
         function formatTime(time) {
             const minutes = Math.floor(time / 60);
             const seconds = Math.floor(time % 60);
@@ -581,9 +586,9 @@
                 }
             });
             updateLikedSongs();
+            switchLanguage('kr');
         });
 
-        // Toggle the visibility of the volume popup
         function toggleVolumePopup() {
             const popup = document.getElementById('volumePopup');
             if (popup.style.display === 'block') {
@@ -599,30 +604,50 @@
             }
         }
 
-        // Toggle theme between light and dark
-        function toggleTheme() {
-            isDarkTheme = !isDarkTheme;
-            document.body.className = isDarkTheme ? 'night' : 'day';
-            document.querySelectorAll('.container').forEach(container => {
-                container.style.background = isDarkTheme ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)';
-            });
-            document.querySelectorAll('.song-item').forEach(item => {
-                item.style.borderColor = isDarkTheme ? '#55FF55' : '#000';
-            });
-        }
-
-        // Language switcher
         function switchLanguage(lang) {
             const elements = document.querySelectorAll('[data-lang-' + lang + ']');
+            selectedLanguage = lang; // Update selectedLanguage here
+            const languageMessages = {
+                kr: "زمان گۆڕا بۆ کوردی",
+                en: "Language changed to English",
+                fa: "زبان به فارسی تغییر کرد"
+            };
+
+            const currentLangMessage = languageMessages[lang];
+            if (currentLangMessage) {
+                showNotif(currentLangMessage, 'info');
+            }
+
             elements.forEach(element => {
                 element.textContent = element.getAttribute('data-lang-' + lang);
             });
         }
 
-        // Example of switching language on load
-        window.addEventListener('load', () => {
-            switchLanguage('kr'); // Default to English
-        });
+        function showNotif(message, type) {
+            const notif = document.createElement('div');
+            notif.className = 'notif';
+            notif.textContent = message;
+
+            if (type === 'success') {
+                notif.style.background = '#51F758';
+                notif.innerHTML += '  <i class="fas fa-check-circle"></i>';
+            } else if (type === 'error') {
+                notif.style.background = '#F44336';
+                notif.innerHTML += ' <i class="fas fa-exclamation-circle"></i>';
+            } else if (type === 'info') {
+                notif.style.background = '#219ebc';
+                notif.innerHTML += ' <i class="fas fa-info-circle"></i>';
+            } else {
+                notif.style.background = 'white';
+            }
+
+            document.body.appendChild(notif);
+
+            setTimeout(() => {
+                notif.style.opacity = "0";
+                setTimeout(() => notif.remove(), 500);
+            }, 5000);
+        }
     </script>
 </body>
 </html>
