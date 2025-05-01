@@ -598,6 +598,8 @@
             switchLanguage('kr');
         });
 
+        // TODO: Add event listener for space key to play music
+
         function toggleVolumePopup() {
             const popup = document.getElementById('volumePopup');
             if (popup.style.display === 'block') {
@@ -648,6 +650,14 @@
                 notif.innerHTML += ' <i class="fas fa-info-circle"></i>';
             } else {
                 notif.style.background = 'white';
+            }
+
+            const existingNotifs = document.querySelectorAll('.notif');
+            if (existingNotifs.length > 0) {
+                const lastNotif = existingNotifs[existingNotifs.length - 1];
+                notif.style.bottom = `${parseInt(lastNotif.style.bottom) + 50}px`;
+            } else {
+                notif.style.bottom = '20px';
             }
 
             document.body.appendChild(notif);
