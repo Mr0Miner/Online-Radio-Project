@@ -385,7 +385,7 @@
         let playlist = makePlaylist();
         let history = [];
         let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
-        let selectedLanguage = 'kr'; // Initialize selectedLanguage
+        let selectedLanguage = 'kr';
 
         function makePlaylist() {
             const list = new Set();
@@ -416,9 +416,7 @@
 
         function togglePlay() {
             if (audio.paused) {
-                audio.play().catch(error => {
-                    console.error("Playback failed:", error);
-                });
+                audio.play().catch(error => {console.error("Playback failed:", error);});
                 isPlaying = true;
             } else {
                 audio.pause();
@@ -568,6 +566,7 @@
 
         function setVolume(value) {
             audio.volume = value;
+            localStorage.setItem('popupVolume', value); // Save volume to localStorage
         }
 
         function formatTime(time) {
@@ -587,6 +586,11 @@
         audio.onended = nextSong;
 
         window.addEventListener('load', () => {
+            const savedVolume = localStorage.getItem('popupVolume'); // Retrieve saved volume
+            if (savedVolume) {
+                document.getElementById('popupVolume').value = savedVolume; // Set slider to saved volume
+                setVolume(savedVolume); // Set audio volume to saved value
+            }
             document.getElementById('playBtn').addEventListener('click', () => {
                 if (!isPlaying && currentSong === null) {
                     loadSong(playlist[0]);
@@ -681,7 +685,7 @@
                     more.style.display = 'block';
                     toggleIcon.innerHTML = 'keyboard_arrow_right';
                 }
-            }
+        }
     </script>
 </body>
 </html>
