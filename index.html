@@ -300,8 +300,33 @@
             padding: 12px 20px;
             border-radius: 5px;
             opacity: 0.9;
-            transition: opacity 0.5s ease-in-out;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
             z-index: 10;
+            transform: translateY(100%);
+            animation: slideIn 0.5s forwards;
+            overflow: hidden;
+        }
+
+        .notif::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.5);
+            width: 0%;
+            animation: progress 5s linear forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
         }
 
         .notif[data-lang="fa"], .notif[data-lang="kr"] {
@@ -365,11 +390,13 @@
 
         <div id="sharePanel">
             <button id="closeSharePanel" onclick="toggleSharePanel()">&times;</button>
-            <h3 data-lang-en="Share Songs" data-lang-fa="اشتراک گذاری آهنگ‌ها" data-lang-kr="گۆرانیەکان بڵاوبکەرەوە">گۆرانیەکان بڵاوبکەرەوە</h3>
+            <h3 data-lang-en="Share Songs" data-lang-fa="اشتراک گذاری آهنگ‌ها" data-lang-kr="هاوبەشکردن گۆرانیەکان">هاوبەشکردن گۆرانیەکان</h3>
             <h4 data-lang-en="Saved Songs" data-lang-fa="آهنگ‌های ذخیره شده" data-lang-kr="گۆرانی سەیڤ کراو">گۆرانی سەیڤ کراو</h4>
-            <input type="text" id="shareCode" placeholder="کۆدەکانی هاوبەش" readonly>
-            <button onclick="copyShareCode()" data-lang-en="Copy" data-lang-fa="کپی" data-lang-kr="کۆپی">کۆپی</button>
-            <!-- <button onclick="generateShareCode()" data-lang-en="Generate Code" data-lang-fa="دروست کردن کد" data-lang-kr="دروستکردنی کۆد">دروستکردنی کۆد</button> -->
+            <div style="position: relative;">
+                <input type="text" id="shareCode" placeholder="کۆدەکانی هاوبەش" readonly>
+                <button onclick="copyShareCode()" style="position: absolute; right: -3%; top: 50%; transform: translateY(-50%); background: none; border: none; color: #55FF55; cursor: pointer;"><i class="fas fa-copy"></i></button>
+                <button onclick="generateShareCode()" style="position: absolute; right: 10%; top: 50%; transform: translateY(-50%); background: none; border: none; color: #55FF55; cursor: pointer;"><i class="fa fa-refresh"></i></button>
+            </div>
             <h4 data-lang-en="Enter Code" data-lang-fa="کد را وارد کنید" data-lang-kr="کۆدەکە داخڵ بکە">کۆدەکە داخڵ بکە</h4>
             <input type="text" id="enterCode" placeholder="کۆدەکە داخڵ بکە">
             <button onclick="enterShareCode()" data-lang-en="Confirm" data-lang-fa="تأیید" data-lang-kr="پشتڕاستکردنەوە">پشتڕاستکردنەوە</button>
@@ -380,6 +407,8 @@
         const dbPath = 'server/list';
         const numberOfSongs = 631;
         const audio = new Audio();
+        const savedVolume = localStorage.getItem('popupVolume');
+        const savedLanguage = localStorage.getItem('selectedLanguage') || 'kr';
         let currentSong = null;
         let isPlaying = false;
         let playlist = makePlaylist();
@@ -463,13 +492,23 @@
                 setTimeout(() => {
                     panel.style.transform = 'translate(-50%, -50%) scale(1)';
                 }, 10);
-                generateShareCode();
             }
         }
 
         function generateShareCode() {
             const code = likedSongs.join(',');
             document.getElementById('shareCode').value = code;
+
+            const generateShareCodeMessages = {
+                kr: "کۆدی نوێی هاوبەشکردن دروست کرا!",
+                en: "New Share code created!",
+                fa: "کد اشتراک‌گذاری جدید ایجاد شد!"
+            };
+
+            const currentgenerateShareCodeMessage = generateShareCodeMessages[selectedLanguage];
+            if (currentgenerateShareCodeMessage) {
+                showNotif(currentgenerateShareCodeMessage, 'success');
+            }
         }
 
         function copyShareCode() {
@@ -586,10 +625,9 @@
         audio.onended = nextSong;
 
         window.addEventListener('load', () => {
-            const savedVolume = localStorage.getItem('popupVolume'); // Retrieve saved volume
             if (savedVolume) {
-                document.getElementById('popupVolume').value = savedVolume; // Set slider to saved volume
-                setVolume(savedVolume); // Set audio volume to saved value
+                document.getElementById('popupVolume').value = savedVolume;
+                setVolume(savedVolume);
             }
             document.getElementById('playBtn').addEventListener('click', () => {
                 if (!isPlaying && currentSong === null) {
@@ -599,7 +637,12 @@
                 }
             });
             updateLikedSongs();
-            switchLanguage('kr');
+            switchLanguage(savedLanguage);
+            generateShareCode();
+
+            if (savedVolume != audio.volume) {
+                setVolume(savedVolume);
+            }
         });
 
         // TODO: Add event listener for space key to play music
@@ -621,7 +664,9 @@
 
         function switchLanguage(lang) {
             const elements = document.querySelectorAll('[data-lang-' + lang + ']');
-            selectedLanguage = lang; // Update selectedLanguage here
+            selectedLanguage = lang;
+            localStorage.setItem('selectedLanguage', lang);
+            document.getElementById('languageSelect').value = lang;
             const languageMessages = {
                 kr: "زمان گۆڕا بۆ کوردی",
                 en: "Language changed to English",
@@ -644,7 +689,7 @@
             notif.textContent = message;
 
             if (type === 'success') {
-                notif.style.background = '#51F758';
+                notif.style.background = '#3FD245';
                 notif.innerHTML += '  <i class="fas fa-check-circle"></i>';
             } else if (type === 'error') {
                 notif.style.background = '#F44336';
