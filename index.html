@@ -471,6 +471,16 @@
                     isPlaying = true;
                     updateProgress();
                     updateLikeIcon();
+
+                    if ('mediaSession' in navigator) {
+                        navigator.mediaSession.metadata = new MediaMetadata({
+                            title: meta[1],
+                            artist: meta[0],
+                            artwork: [
+                                { src: 'client/logo.png', sizes: '96x96', type: 'image/png' }
+                            ]
+                        });
+                    }
                 });
         }
 
@@ -654,6 +664,13 @@
 
         audio.ontimeupdate = updateProgress;
         audio.onended = nextSong;
+
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('play', togglePlay);
+            navigator.mediaSession.setActionHandler('pause', togglePlay);
+            navigator.mediaSession.setActionHandler('previoustrack', prevSong);
+            navigator.mediaSession.setActionHandler('nexttrack', nextSong);
+        }
 
         window.addEventListener('load', () => {
             if (savedVolume) {
