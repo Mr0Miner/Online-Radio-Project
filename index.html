@@ -1,877 +1,1030 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>Radio</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="client/logo.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="client/logo.png" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
     <script src="client/all.js" crossorigin="anonymous"></script>
     <style>
-        :root {
-            --primary-color: #55FF55;
-        }
-        * {
-            box-sizing: border-box;
-            transition: all 0.3s ease;
-        }
+      :root {
+        --primary-color: #55ff55;
+      }
+      * {
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+      }
 
-        body {
-            background: #000;
-            color: #fff;
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-            font-size: 16px;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-            overflow-x: hidden;
-        }
+      body {
+        background: #000;
+        color: #fff;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+        font-size: 16px;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+        overflow-x: hidden;
+      }
 
-        button {
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-            font-size: 16px;
-            font-weight: bold;
+      button {
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+        font-size: 16px;
+        font-weight: bold;
+      }
 
-        }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 15px;
+        background: rgba(0, 0, 0, 0.8);
+        box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+      }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.8);
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
-        }
+      #playBtn {
+        background: none;
+        border: 2px solid var(--primary-color);
+        border-radius: 50%;
+        padding: 20px;
+        width: 100px;
+        height: 100px;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+      }
 
-        #playBtn {
-            background: none;
-            border: 2px solid var(--primary-color);
-            border-radius: 50%;
-            padding: 20px;
-            width: 100px;
-            height: 100px;
-            cursor: pointer;
-            position: relative;
-            z-index: 1;
-        }
+      #playBtn svg {
+        width: 40px;
+        height: 40px;
+        fill: var(--primary-color);
+      }
 
-        #playBtn svg {
-            width: 40px;
-            height: 40px;
-            fill: var(--primary-color);
-        }
+      #playBtn:hover {
+        background: rgba(85, 255, 85, 0.2);
+      }
 
-        #playBtn:hover {
-            background: rgba(85, 255, 85, 0.2);
-        }
+      .control-group {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin: 30px 0;
+      }
 
-        .control-group {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin: 30px 0;
-        }
+      .control-btn {
+        background: none;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+      }
 
-        .control-btn {
-            background: none;
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-        }
+      .control-btn:hover {
+        background: rgba(85, 255, 85, 0.2);
+      }
 
-        .control-btn:hover {
-            background: rgba(85, 255, 85, 0.2);
-        }
+      #songInfo {
+        color: var(--primary-color);
+        font-size: 20px;
+        margin: 20px 0;
+      }
 
-        #songInfo {
-            color: var(--primary-color);
-            font-size: 20px;
-            margin: 20px 0;
-        }
+      #progressContainer {
+        width: 100%;
+        margin: 20px 0;
+      }
 
-        #progressContainer {
-            width: 100%;
-            margin: 20px 0;
-        }
+      #progress {
+        width: 100%;
+        border-radius: 4px;
+        accent-color: var(--primary-color);
+      }
 
-        #progress {
-            width: 100%;
-            border-radius: 4px;
-            accent-color: var(--primary-color);
-        }
+      #time {
+        color: var(--primary-color);
+        margin: 10px 0;
+        font-size: 14px;
+      }
 
-        #time {
-            color: var(--primary-color);
-            margin: 10px 0;
-            font-size: 14px;
-        }
+      #likedSongs {
+        margin-top: 30px;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+      }
 
-        #likedSongs {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-        }
+      #likedSongs h2 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+      }
 
-        #likedSongs h2 {
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
+      .song-item {
+        padding: 10px;
+        border-bottom: 1px solid var(--primary-color);
+        cursor: pointer;
+      }
 
-        .song-item {
-            padding: 10px;
-            border-bottom: 1px solid var(--primary-color);
-            cursor: pointer;
-        }
+      .song-item:hover {
+        background: rgba(85, 255, 85, 0.1);
+      }
 
-        .song-item:hover {
-            background: rgba(85, 255, 85, 0.1);
-        }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
 
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
+      ::-webkit-scrollbar-track {
+        background: #1a1a1a;
+      }
 
-        ::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
+      ::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 4px;
+      }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 4px;
-        }
+      ::selection {
+        color: #000;
+        background: var(--primary-color);
+      }
 
-        ::selection {
-            color: #000;
-            background: var(--primary-color);
-        }
+      #volumePopup {
+        display: none;
+        position: absolute;
+        background: rgba(0, 0, 0, 0.9);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        z-index: 2;
+        width: 300px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.3s ease;
+      }
 
-        #volumePopup {
-            display: none;
-            position: absolute;
-            background: rgba(0, 0, 0, 0.9);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-            z-index: 2;
-            width: 300px;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.3s ease;
-        }
+      #volumePopup.show {
+        transform: translate(-50%, -50%) scale(1);
+      }
 
-        #volumePopup.show {
-            transform: translate(-50%, -50%) scale(1);
-        }
+      #volumePopup h3 {
+        color: var(--primary-color);
+        font-size: 24px;
+        margin: 0;
+      }
 
-        #volumePopup h3 {
-            color: var(--primary-color);
-            font-size: 24px;
-            margin: 0;
-        }
+      #volumePopup input {
+        width: 100%;
+        margin: 10px 0;
+      }
 
-        #volumePopup input {
-            width: 100%;
-            margin: 10px 0;
-        }
+      #volumePopup button {
+        background: var(--primary-color);
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-        #volumePopup button {
-            background: var(--primary-color);
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            height: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      #volumePopup button:hover {
+        background: rgba(85, 255, 85, 0.8);
+      }
 
-        #volumePopup button:hover {
-            background: rgba(85, 255, 85, 0.8);
-        }
+      #shareBtn,
+      #toggleSongListBtn {
+        background: none;
+        color: var(--primary-color);
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
-        #shareBtn, #toggleSongListBtn {
-            background: none;
-            color: var(--primary-color);
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+      #shareBtn:hover,
+      #toggleSongListBtn:hover {
+        transform: scale(1.2);
+      }
 
-        #shareBtn:hover, #toggleSongListBtn:hover {
-            transform: scale(1.2);
-        }
+      #sharePanel {
+        display: none;
+        position: fixed;
+        background: rgba(0, 0, 0, 0.95);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+        z-index: 3;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.3s ease;
+        width: 350px;
+      }
 
-        #sharePanel {
-            display: none;
-            position: fixed;
-            background: rgba(0, 0, 0, 0.95);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
-            z-index: 3;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.3s ease;
-            width: 350px;
-        }
+      #sharePanel.show {
+        transform: translate(-50%, -50%) scale(1);
+      }
 
-        #sharePanel.show {
-            transform: translate(-50%, -50%) scale(1);
-        }
+      #sharePanel h3 {
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        font-size: 24px;
+      }
 
-        #sharePanel h3 {
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
+      #sharePanel h4 {
+        margin-bottom: 0px;
+      }
 
-        #sharePanel h4 {
-            margin-bottom: 0px;
-        }
+      #shareCode,
+      #enterCode {
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid var(--primary-color);
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
 
-        #shareCode, #enterCode {
-            width: 100%;
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid var(--primary-color);
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
+      #sharePanel button {
+        background: var(--primary-color);
+        color: #000;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+      }
 
-        #sharePanel button {
-            background: var(--primary-color);
-            color: #000;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
+      #sharePanel #closeSharePanel {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        color: var(--primary-color);
+        font-size: 30px;
+        cursor: pointer;
+        padding: 0;
+      }
 
-        #sharePanel #closeSharePanel {
-            position: absolute;
-            top: 10px; 
-            right: 10px; 
-            background: none; 
-            border: none; 
-            color: var(--primary-color); 
-            font-size: 30px; 
-            cursor: pointer;
-            padding: 0;
-        }
+      #languageToggle {
+        position: relative;
+      }
 
-        #languageToggle {
-            position: relative;
-        }
+      #languageToggle select {
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+        text-align: center;
+        appearance: none;
+        width: 90px;
+        font-size: 15px;
+        padding: 6px 0;
+        background-color: #000;
+        border-radius: 5px;
+        color: #ffffff;
+        cursor: pointer;
+        outline: none;
+        transition: transform 0.3s ease;
+      }
 
-        #languageToggle select {
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-            text-align: center;
-            appearance: none;
-            width: 90px;
-            font-size: 15px;
-            padding: 6px 0;
-            background-color: #000;
-            border-radius: 5px;
-            color: #FFFFFF;
-            cursor: pointer;
-            outline: none;
-            transition: transform 0.3s ease;
-        }
+      #languageToggle:hover {
+        transform: scale(1.05);
+      }
 
-        #languageToggle:hover {
-            transform: scale(1.05);
-        }
+      #languageToggle::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+        top: 50%;
+        right: 0;
+        transform: translate(0, -50%);
+        width: 0;
+        height: 0;
+        background-color: #ffffff;
+        clip-path: polygon(50% 80%, 0 20%, 100% 20%);
+      }
 
-        #languageToggle::after {
-            content: "";
-            position: absolute;
-            pointer-events: none;
-            top: 50%;
-            right: 0;
-            transform: translate(0, -50%);
-            width: 0;
-            height: 0;
-            background-color: #FFFFFF;
-            clip-path: polygon(50% 80%, 0 20%, 100% 20%);
-        }
-
-        /* --- Notif Styles Improved --- */
+      /* --- Notif Styles Improved --- */
+      .notif {
+        position: fixed;
+        right: 20px;
+        min-width: 260px;
+        max-width: 90vw;
+        box-shadow: 0 8px 32px 0 rgba(0, 255, 0, 0.25),
+          0 1.5px 6px 0 rgba(0, 0, 0, 0.15);
+        color: #fff;
+        padding: 16px 40px 16px 20px; /* فضای بیشتر برای progress bar */
+        border-radius: 12px;
+        opacity: 0.97;
+        z-index: 1000;
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        top: unset;
+        left: unset;
+        bottom: 20px;
+        transform: translateY(0);
+        background: #222;
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+          opacity 0.4s, bottom 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      }
+      .notif.success {
+        background: linear-gradient(90deg, #3fd245 80%, #2e7d32 100%);
+      }
+      .notif.error {
+        background: linear-gradient(90deg, #f44336 80%, #b71c1c 100%);
+      }
+      .notif.info {
+        background: linear-gradient(90deg, #219ebc 80%, #023e8a 100%);
+      }
+      .notif .notif-icon {
+        font-size: 1.4em;
+        margin-left: 0;
+        margin-right: 0;
+      }
+      .notif .notif-close {
+        position: absolute;
+        top: 8px;
+        right: 10px;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.2em;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+      }
+      .notif .notif-close:hover {
+        opacity: 1;
+      }
+      .notif .notif-progress {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        bottom: 0;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 0 0 8px 8px;
+        overflow: hidden;
+      }
+      .notif .notif-progress-bar {
+        height: 100%;
+        width: 0%;
+        background: #fff;
+        opacity: 0.5;
+        transition: width linear;
+      }
+      @media (max-width: 600px) {
         .notif {
-            position: fixed;
-            right: 20px;
-            min-width: 260px;
-            max-width: 90vw;
-            box-shadow: 0 8px 32px 0 rgba(0,255,0,0.25), 0 1.5px 6px 0 rgba(0,0,0,0.15);
-            color: #fff;
-            padding: 16px 40px 16px 20px; /* فضای بیشتر برای progress bar */
-            border-radius: 12px;
-            opacity: 0.97;
-            z-index: 1000;
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            top: unset;
-            left: unset;
-            bottom: 20px;
-            transform: translateY(0);
-            background: #222;
-            transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55), opacity 0.4s, bottom 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+          right: 5vw;
+          left: 5vw;
+          min-width: unset;
+          max-width: 90vw;
+          font-size: 0.95rem;
+          padding: 12px 36px 12px 12px;
         }
-        .notif.success { background: linear-gradient(90deg, #3FD245 80%, #2e7d32 100%); }
-        .notif.error { background: linear-gradient(90deg, #F44336 80%, #b71c1c 100%); }
-        .notif.info { background: linear-gradient(90deg, #219ebc 80%, #023e8a 100%); }
-        .notif .notif-icon {
-            font-size: 1.4em;
-            margin-left: 0;
-            margin-right: 0;
-        }
-        .notif .notif-close {
-            position: absolute;
-            top: 8px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 1.2em;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-        .notif .notif-close:hover { opacity: 1; }
         .notif .notif-progress {
-            position: absolute;
-            left: 5px;
-            right: 5px;
-            bottom: 0;
-            height: 4px;
-            background: rgba(255,255,255,0.15);
-            border-radius: 0 0 8px 8px;
-            overflow: hidden;
+          left: 5px;
+          right: 5px;
+          border-radius: 0 0 6px 6px;
         }
-        .notif .notif-progress-bar {
-            height: 100%;
-            width: 0%;
-            background: #fff;
-            opacity: 0.5;
-            transition: width linear;
+      }
+      @keyframes notifSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(40px) scale(0.95);
         }
-        @media (max-width: 600px) {
-            .notif {
-                right: 5vw;
-                left: 5vw;
-                min-width: unset;
-                max-width: 90vw;
-                font-size: 0.95rem;
-                padding: 12px 36px 12px 12px;
-            }
-            .notif .notif-progress {
-                left: 5px;
-                right: 5px;
-                border-radius: 0 0 6px 6px;
-            }
+        to {
+          opacity: 0.97;
+          transform: translateY(0) scale(1);
         }
-        @keyframes notifSlideIn {
-            from { opacity: 0; transform: translateY(40px) scale(0.95); }
-            to { opacity: 0.97; transform: translateY(0) scale(1); }
-        }
+      }
 
-        .notif[data-lang="fa"], .notif[data-lang="kr"] {
-            direction: rtl;
-            text-align: right;
-        }
+      .notif[data-lang="fa"],
+      .notif[data-lang="kr"] {
+        direction: rtl;
+        text-align: right;
+      }
 
-        .notif[data-lang="en"] {
-            direction: ltr;
-            text-align: left;
-        }
+      .notif[data-lang="en"] {
+        direction: ltr;
+        text-align: left;
+      }
 
-        #githubLogo {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            max-width: 30px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
+      #githubLogo {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        max-width: 30px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
 
-        #githubLogo:hover {
-            transform: scale(1.05);
-        }
+      #githubLogo:hover {
+        transform: scale(1.05);
+      }
     </style>
-</head>
-<body>
-    <a href="https://github.com/Mr0Miner/Online-Radio-Project" target="_blank" style="display: block;">
-        <img id="githubLogo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAEuBJREFUeF7tXQmUZUV5/r7663aHfQAhhH2RRWVHgRB2cQ6cnCABIoiIQpQAIRgDAcISUEQMCrLEJAqIBjKIO3JwIAxI2EGWYQuLJNERjURkMwN036r6c+rNm0l3z+t+9953673X3a/O4QDn/fX9y/36LlV//T8xA4eqbuK9fwfJraC6FYHNArAqVVcEuQKAFZv/rNJ0/7cA3mj8o/qGkm8a4HUFngf5jKo+IyJPk/zpTAsXp7tDqrqi935fAvuD3B2q2yX06a1ICKjepcDNIvIjkm8m1JcceloSQEdGtgrWHkDV/RXYC8Bw8ki1VvAmgTuUnG+MmU/y+R7ZUVnttCGAqm4enPswgA+A3LKyxyknqj4FY643xswj+R8pVdWF3dcEUNXNQghHIIR40beuy+mu4JCPAohkuI7koq7orKCkLwmgo6O7qjGfUmBuBZ/6bgqBHzCEczk0FEnRV6OvCJDn+T4kzyawT19FqSZjCPyQIZzDoaGHaoLsGKYvCJDn+d4kP0PgDzr2aBoAEFjAEM7g0NCPe21uTwmgqusE7y9tvNjNvqEAvmpETiH5aq/c7wkBVNWEEE6E6nkAVu2V832i9yUFTrHWfr0X9nSdADo6umMQuRqq2/bC4X7VqcC9InIMyWe7aWPXCKCqNjh3HshTAZhuOjmNdI2CPNMYcxHJ+IhIPrpCAFXdNITwbajukNyjGaBAgTtF5DCSv0rtTnICOOeOJXAxgJVSOzPD8F9V4Chr7Y0p/UpGAFVdQb2fp8BBKR2YBdhfEmtPTOVnEgKo6ire+wUEdk5l+GzCJTCfIn9McqRuv2sngKquHZxbAHKbuo2dzXgK3CUiB5BcXGccaiWAqm4QvL8TwMZ1GjnAWhIBBR4Wkf3qXDiqjQCq+vbg/R0A1htcsIQRUH3SWLsvyV/XoaUWAqjqusH7uK69bh1GDTDaRGAJCXYjGVPZOhodE0BV1wzO3Qtyi44sGUwuFQEF7haR95IcLTVxgnBHBIj5eCGEexPn4XXi34ye28gzEDmYpK/qaGUCqOqQ9/4WAntXVT6YV0sErhVrY6pcpVGZAN65awF8qJLWwaR6I0CeJSLnVwGtRADn3EcIfK2KwsGcJBEIRnUvZtndZdFLE6D5ufdY82BFWX0D+XQR+JURiYdhSiWXlCKAqv5OcO7BOlb5CHzLq/5DjAfJDai6LcmtNR7wmMEj7vQReAzkUyGE5+L6jjFmB6jGDbOOBoEbjbUHlgEpRQDv3JcAnFBGwWSyRnU3Ztl9E39X1TkhhD9tvF/MnO3jn0L1WmPtV0j+vFVMvHMvAli749iSJ4nI5UVxChMgz/P9DTm/KHAbuZ+LtRu2w1LVLYL3pwE4pp1sP/7e+ExT/Ttm2b3t7Kv1jyueixwefqadzsbdt4hQ49bvfQTcqIh8WxnVSyXL/rKtXFMgHvYM3n8awJFF5/RSjsDtDOG0MunfeZ7va8jb6rBbgTustYVS6wsRwOf5+SDPqMO4iKHAodba75TF05GRrVXkor49MEI+HkI4Lcuym0v7prpC8P5/60qXU+BIa+2/tLOjLQFUdcvmX387rMK/G5ENJ3sWFgFxzv0Rga8AWGcS+bcUeILAQpD/BeBVVY1vx69J/HcIr2JoqPH/cXs1bmEDWA15PseRq5BcE8AcknMQwjokt1dgewBrTGof+Vci8sUi9k8m4/P88TpesJv4LxqRzdvtF7QlgHPu9ppP6rwo1k524QrHT1VXDd5/DsDhCiyk6sNKLhTvn+Dw8OOFgUoIxu1u7/12JHek6g4K7KjAIhE5uo6Twd65rwI4uoRJ7UQvF2tPmkpoSgI45w4j8I12Wsr8rsD91trfLzNntsj6PD8X5Dl1+mu834bDw09OhjkpARqHN7yPOepvr9MgAt8z1h5cJ+ZMwfLeHwfVf6zTHwLfNdYeUpoAzrkPELi+TmOaWFeKtR9PgDvtIVPccWNQjPfv4vDwv7cKUMs7gKoyOPckyHcmiOrVYu20/K5PEItxkM65Iwlck0DPN8TaDxYmgHPuYAKlP9MKGn6NWHtUQdlZJeac+yiBq1M4bUS2JBmXnseNlncAn+dPJfrrjytPNxtrD0jh5HTH9N6fDtULEvnxz2LtR9oSQPN890DelcgIQPVJybJByniLAHvn4ubY8alib0RWn7hbuNwdwDv3ZQDHpjICQDAiK0/38mop4uOce5DAe1JgNzDJ40Xkn8bityLAywBWT2ZEfCtV3aNK8kJKm3qNraorNZeCk5kSE0mttXtMSgDn3EHxOz2ZBUuBybNF5DPJ9UwjBXmezzXkLalNNiIbk/zZsksxVmFw7jsKJF+kKbNblTog/YLvvT8Zql9Ibg95poh8djkCqOrKwft4+88SG/G6EXk3yZ8k1jOt4FU1897HfZfdExv+vFi7+XIEcM59kMC8xMoRVOdmWXZraj3TEV9V1wrex3zL30tpf3OXsFHWdtlLoHfuSgAxFSvdUL1Qsixm+AzGJBHQPN8zkPGMZdud2spBJI8Tkfi1N44A8cWgbZpWZaXAz5rMyzvAmBVTvXNXAPhYKmdjQq6xtlGar8GyRk1e75NWuq6aBZQqCP2M26ix4P1/Jiyr87JYG5NelhCgWcencUtIMlSflixLsbGUxNx+APV5fgnIT6SyxYSwPYeGHmsQIDj3TQX+JJWyVitQyXTNEODmAZx0X0rkySJycYMA3rl4u9kkUezeMiJrkYwJj4NRIgLBudsU2LfElDKi14m1R1BVh4P3b5WZWUZ27AtHmXkD2caj+SgCaUrIko+IyE6MqdZB5IlUAY+PFmvtt1Phz2TcxPsDi8XalemcO4RAsgtkRNYkGVcYB6NCBLz3C1MV4DAi69J7/zdQXbY2XMHGyaeoPiFZNigK3UFQvXNx+/bPOoCYdGrjSLl3Lj5jUqVoXS/WHp7C+NmC6b0/Caqxp0LtQ4Fj4yPg7mSdOlQ/K1l2Zu2WzyLAmg/ljo+c6oXxEZDsGTP4/u+cqToysm0QiRtEKcZV9Hn+HMhl24N1alHgY9baq+rEnG1Yqrpx8D6eb6x9EPh+fAeIPe02qB19ySngD1trYzGpwagYgUbBDO9fqTh9ymkK/FskwEsAGhsDdY/BHaDziKrqGsH733SO1AJB9clIgNg1O3bUrn+QfyEif18/8OxBVNX1g/cty8rUEIVfRgKk601Dnioin6/B0FkL0eiZ7P1yJ3pqCsibae8AqudKln2qJmNnJYyOjm4XjFmYyPk3IgHSZQKpXiZZlmxPO1FQ+gpW83yvZopYCrsWxXWAR1KVY6tSty6Fl9MZ0zl3NIFYOaT+QT4Sj4HfqsB+9aM3jiI9LiLbJcGeJaA+z2OvxbNSuEvgX+Mj4LpYZyeFgkZRJmvnJMKeFbDeuVjp64hEzs6LBIhVJZO1JTMi65P8RSIHZjxszZXDxsdL9bK4FFx7YaKxWhQ43FqbotTMjL/4sfdinbUDlwsYeXZ8CYxdvAvXli0d9cGXQOmQLZ2Q5/k+hry9MkC7ieTxcTu49lJw4/Q2c8/a2TL4ffkIJE3WaVZsZZ7n+xky6Vk9I7IRybjpNBglIuCce4jATiWmlBINqvvErODY8i3tS9pgSbjUhYnCOjKyVRB5uvTEEhMa+ZpR3jsX95uTdftU4MfW2kEf4RIXx+f5BSBPLzGlnKjqTyTLtlhKgFibLmkpdqO6O7PsnnJWzk7p5tt/vCunLNXzNbE2rjJ24WzgkkOItxhrZ3Q7mLro6r0/AaqxO0uysTRXY8np4C48b6IeE8LOHBqKLWYHY4oIeOfimcBaazRPVLe0cOTYAhHJMoOWKV/S83b7TjpdznTmpFz7HxO78cfD4w/Bue8r8P7kASZPEZGLkuuZhgp0dHSXYEzsL2RSmj+2Yvv/3wG6VaUKGDHev4fDw8nOI6YMXirsZu5frOuftD5Qw/7m0fDGfy51qMm++1M5OAF3kRHZYXBmcElUVFW893d0oUJYQ9/Yd7FxhYi8c4u71RFUgXtEZC7JmJQ6q0eCVjFTxfMNsXalpQITCZC0ONFEq2LpUhF5H8lk9Qn6mVmNvgzex+ps3eyfcJVYu6wA1TgCJE5AbHktmneCw2ZbzkBseqXeX5m0NE+LiJsQduDQ0LIk0+Vq0Tnn7iewS5f/cl5T4ARrbfJClV32q6W6PM/fZ8jYGGK9btqjwIPW2nHXthUBknWtaOesAg9JCCdyaOiBdrLT8XcdGXlHs/FlTxpmKHCMtXZcR5LlCNCsGfQ/AFbtVZAJ/JDenz5TPhWbrW/PAxD79iT9xp/imsUazWuTHBkrM1nLmItBfrIwAVQ/Z4AbYW38tifyPG5l7qmqsfNY5QYI8fSqV/1ylVashW1PKNgs+xqre6RK6ixuverFkmUnT5wwWdewUseRWrUiWaqomXASe+F1sra9CKrfDcBNWZYtKO519yUbFx2It/iDQW7RfQtaazQiW7Sq0D5pQeLg3AIF3lvQgSk7gcVqV+r9t3RJYDoeCjxM4FGQC00Ij8Lax2IP4I6BSwLo6OiuQWR7qG4b28gSiPWQ0hy0LWnbhNv8bcbalmc/JiWAc+7QWOOvqN541lxEDiUZN5WWG7EFvff+NgK7FcUsKfcKVH9hrD2QSxpGJxnBuUjk2Jo9yZH6FEZPVad5ypLkFY6Nva7AydbauLjRigSrhBDuhGrsxF37KNoyvRPFqrpO8P7RKTqXdwJf/1zyURHZcTLgKQlQeX9A9SLJslMmIcEGzaYIdWe7dK0jqXPu/fEFtf6rVT+iCWHXqT6r2zYlqNxGbopE0AT57r8xIpuQ/G39IWyN6Jx7gEC/5zleIdZO2QKwLQFUdfVmgYK3lQ3uVOzzeX4+yDPKYraUV71Esqz4Z2sNSp1zhxOI5yr7dbxiRDYjOWV9obYEiN5V7mnb5nSwc+4+Art2GkHj/TYcHo576V0b8aU2eP9rACt3TWkJRUXrMxUiQJME91R6g1f9lGTZuVO8D8TFo9VK+DZRdJFYu1EH8ytPTXyyurJdCjxgrS30h1WYAKq6ZfD+KQBS0rLciLyTZMuWNA3cEK6vWhA5Fro21qZrdjGFs977P4dqvxXBUuP9dkWX0QsTIMbB5/nnQbZ8u5+KFEV6Bvg8vxDkX5ckV6xFuNwGR1mMqvKa53sE8s6q8xPNu1ysPakodikCqOqKzU+40su6ky1FjjU09i5Qkb9ts0f+GoE7AnCjiNww2cJT0QB0Ipe4hFsV02Jntm3KfA2VIkC0qFm27GEAq5S0cJ5Y+6Eic1R1Ne/93iTfhRCGYMxiVV0kITw7NpmhCFZqmaRl9soZ/4bxfmcOD8fHdOFRmgAROc/zvQ35o8JamoJGZD2Svyw7r5/lkxbaLOF4UN0/y7LSzacrESDa5Zw7hkDZQtCF7wIlfO+paMpSu4UdIz8hIpcVlh8jWJkAEaPKS6ECB1lrb6hibD/O8c7Fdjh1L2uXcbWjJfCOCBCtDM7doMCBJSx+xYQwl0NDD5WY07ei3rlYyHmNXhhI4FZj7dxOdHdMgMZR5hDuK/sdP1OKR3nnXu1wIava9VN9xli7C8nXqwEsmdUxASKIqq4XvI9/0euUNOabRuRUkrFc7bQc3rnXepA/+bIReXcdeQ+1EKBJgk2Dc/MrpUGRjwD4ngnhNmbZfUWYELOMMDq6adEVryKYVWR6QIAXjPcH1LX3URsBmiSY472/gcCeVYLZnLM4lpQxwEsKvAzVmGE0DDLWs3lbANYmsCmAxu5ksy1tyyykDmwoPNU7F1viLjtqVXhiBcFG2rzIH5KMWdu1jFoJsNSibp516wMCdOU8JYEfUORwkm/WcuWbIEkIELG996dD9YI6jW2F1QcESNdxZanDqhdIltWTOzEhiMkIEPU45w4iEIsdr5iKCH1AgHQdV5YUc0y62ZWUAI33gtHRnYIxNwH43RQk6AMCjALIEvj2ulE9gFkWK4YkG8kJ0Hw5XN97P4/AHnV70gcEqP8OoPpEzHEg+Wzd8ZqI1xUCLFXaTC37Qp059X1AgFDXegqAxSDPMcZ8kWTETT66SoDm3WDN4H0kwUfr8K4PCFDLHYDATRQ5juQLdcSlKEbXCbDsxTZm0wBXVlo4GuPdDCDAfzdrI/TknEHPCLBszcD7s6H66aKMnSg3rQmgeqmx9uwyGTxV4zTZvJ4ToPlY2FS9v0KBfcs6OC0JEF/yVI/phx3RviDAmMfCnkqepMAhRYlgRDYkmaq1alszyqSEEVgQgEustfGzuC9GXxFgGRHi7qJzJ4D8OIC1poqUWNtTHwrU9Y0rhV83Ipd247OuLKt6GrwixjrnYiLpJ1t2zuiD1rTe+7OgGsu/jB+qz8GYS40x1/TyGd8uxn1PgGV3hViMwZjjFdiIwAsKzLfWxmXmno/m+sY+CmwYdzG96pVVEjR74ci0IUAvgjMbdA4IMBuu8hQ+Dggwywnwf+XKlyd8WDpMAAAAAElFTkSuQmCC" alt="GitHub Logo">
+  </head>
+  <body>
+    <a
+      href="https://github.com/Mr0Miner/Online-Radio-Project"
+      target="_blank"
+      style="display: block"
+    >
+      <img
+        id="githubLogo"
+        src="data:image/png;base64,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"
+        alt="GitHub Logo"
+      />
     </a>
     <div class="container">
-        <div id="songInfo">
-            <h2 id="artistName"></h2>
-            <p id="songTitle"></p>
-        </div>
+      <div id="songInfo">
+        <h2 id="artistName"></h2>
+        <p id="songTitle"></p>
+      </div>
 
-        <button id="playBtn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z"/>
-                <path d="M0 0h24v24H0z" fill="none"/>
-            </svg>
+      <button id="playBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z" />
+          <path d="M0 0h24v24H0z" fill="none" />
+        </svg>
+      </button>
+
+      <div class="control-group">
+        <button class="control-btn" onclick="prevSong()">
+          <i class="fas fa-fast-backward"></i>
         </button>
+        <button class="control-btn" onclick="toggleLike()">
+          <i id="likeIcon" class="far fa-heart"></i>
+        </button>
+        <button class="control-btn" onclick="toggleVolumePopup()">
+          <i class="fas fa-volume-up"></i>
+        </button>
+        <button class="control-btn" onclick="nextSong()">
+          <i class="fas fa-fast-forward"></i>
+        </button>
+      </div>
 
-        <div class="control-group">
-            <button class="control-btn" onclick="prevSong()"><i class="fas fa-fast-backward"></i></button>
-            <button class="control-btn" onclick="toggleLike()"><i id="likeIcon" class="far fa-heart"></i></button>
-            <button class="control-btn" onclick="toggleVolumePopup()"><i class="fas fa-volume-up"></i></button>
-            <button class="control-btn" onclick="nextSong()"><i class="fas fa-fast-forward"></i></button>
-        </div>
+      <div id="progressContainer">
+        <input
+          type="range"
+          id="progress"
+          min="0"
+          max="100"
+          value="0"
+          class="range-slider"
+          disabled
+        />
+        <div id="time">0:00 / 0:00</div>
+      </div>
 
-        <div id="progressContainer">
-            <input type="range" id="progress" min="0" max="100" value="0" class="range-slider" disabled>
-            <div id="time">0:00 / 0:00</div>
-        </div>
+      <div id="likedSongs">
+        <h2
+          style="display: inline"
+          data-lang-en="Liked Songs"
+          data-lang-fa="آهنگ‌های مورد علاقه"
+          data-lang-kr="گۆرانییە دڵخوازەکان"
+        >
+          گۆرانییە دڵخوازەکان
+        </h2>
+        <button id="shareBtn" onclick="toggleSharePanel()" style="float: right">
+          <i class="fas fa-share-square"></i>
+        </button>
+        <button
+          id="toggleSongListBtn"
+          onclick="toggleSongList()"
+          style="float: left"
+        >
+          <i class="material-icons" id="toggleIcon">keyboard_arrow_right</i>
+        </button>
+        <div class="song-list" style="display: none"></div>
+        <h2 id="more" style="display: block; margin: 0">...</h2>
+      </div>
 
-        <div id="likedSongs">
-            <h2 style="display: inline;" data-lang-en="Liked Songs" data-lang-fa="آهنگ‌های مورد علاقه" data-lang-kr="گۆرانییە دڵخوازەکان">گۆرانییە دڵخوازەکان</h2>
-            <button id="shareBtn" onclick="toggleSharePanel()" style="float: right;"><i class="fas fa-share-square"></i></button>
-            <button id="toggleSongListBtn" onclick="toggleSongList()" style="float: left;"><i class="material-icons" id="toggleIcon">keyboard_arrow_right</i></button>
-            <div class="song-list" style="display: none;"></div>
-            <h2 id="more" style="display: block; margin: 0;">...</h2>
-        </div>
+      <div
+        id="languageToggle"
+        style="position: absolute; top: 20px; right: 20px"
+      >
+        <select id="languageSelect" onchange="switchLanguage(this.value)">
+          <option value="kr">کوردی</option>
+          <option value="en">English</option>
+          <option value="fa">فارسی</option>
+        </select>
+      </div>
 
-        <div id="languageToggle" style="position: absolute; top: 20px; right: 20px;">
-            <select id="languageSelect" onchange="switchLanguage(this.value)">
-                <option value="kr">کوردی</option>
-                <option value="en">English</option>
-                <option value="fa">فارسی</option>
-            </select>
-        </div>
+      <div id="volumePopup">
+        <h3 data-lang-en="Sounds" data-lang-fa="صداها" data-lang-kr="دەنگەکان">
+          دەنگەکان
+        </h3>
+        <input
+          type="range"
+          id="popupVolume"
+          min="0"
+          max="1"
+          step="0.01"
+          value="1"
+          onchange="setVolume(this.value)"
+          style="accent-color: var(--primary-color)"
+        />
+        <button
+          id="closeVolumePopup"
+          onclick="toggleVolumePopup()"
+          data-lang-en="Close"
+          data-lang-fa="بستن"
+          data-lang-kr="داخستن"
+        ></button>
+      </div>
 
-        <div id="volumePopup">
-            <h3 data-lang-en="Sounds" data-lang-fa="صداها" data-lang-kr="دەنگەکان">دەنگەکان</h3>
-            <input type="range" id="popupVolume" min="0" max="1" step="0.01" value="1" onchange="setVolume(this.value)" style="accent-color: var(--primary-color);">
-            <button id="closeVolumePopup" onclick="toggleVolumePopup()" data-lang-en="Close" data-lang-fa="بستن" data-lang-kr="داخستن"></button>
+      <div id="sharePanel">
+        <button id="closeSharePanel" onclick="toggleSharePanel()">
+          &times;
+        </button>
+        <h3
+          data-lang-en="Share Songs"
+          data-lang-fa="اشتراک گذاری آهنگ‌ها"
+          data-lang-kr="هاوبەشکردن گۆرانیەکان"
+        >
+          هاوبەشکردن گۆرانیەکان
+        </h3>
+        <h4
+          data-lang-en="Saved Songs"
+          data-lang-fa="آهنگ‌های ذخیره شده"
+          data-lang-kr="گۆرانی سەیڤ کراو"
+        >
+          گۆرانی سەیڤ کراو
+        </h4>
+        <div style="position: relative">
+          <input
+            type="text"
+            id="shareCode"
+            placeholder="کۆدەکانی هاوبەش"
+            readonly
+          />
+          <button
+            onclick="copyShareCode()"
+            style="
+              position: absolute;
+              right: -3%;
+              top: 50%;
+              transform: translateY(-50%);
+              background: none;
+              border: none;
+              color: var(--primary-color);
+              cursor: pointer;
+            "
+          >
+            <i class="fas fa-copy"></i>
+          </button>
+          <button
+            onclick="generateShareCode()"
+            style="
+              position: absolute;
+              right: 10%;
+              top: 50%;
+              transform: translateY(-50%);
+              background: none;
+              border: none;
+              color: var(--primary-color);
+              cursor: pointer;
+            "
+          >
+            <i class="fa fa-refresh"></i>
+          </button>
         </div>
-
-        <div id="sharePanel">
-            <button id="closeSharePanel" onclick="toggleSharePanel()">&times;</button>
-            <h3 data-lang-en="Share Songs" data-lang-fa="اشتراک گذاری آهنگ‌ها" data-lang-kr="هاوبەشکردن گۆرانیەکان">هاوبەشکردن گۆرانیەکان</h3>
-            <h4 data-lang-en="Saved Songs" data-lang-fa="آهنگ‌های ذخیره شده" data-lang-kr="گۆرانی سەیڤ کراو">گۆرانی سەیڤ کراو</h4>
-            <div style="position: relative;">
-                <input type="text" id="shareCode" placeholder="کۆدەکانی هاوبەش" readonly>
-                <button onclick="copyShareCode()" style="position: absolute; right: -3%; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--primary-color); cursor: pointer;"><i class="fas fa-copy"></i></button>
-                <button onclick="generateShareCode()" style="position: absolute; right: 10%; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--primary-color); cursor: pointer;"><i class="fa fa-refresh"></i></button>
-            </div>
-            <h4 data-lang-en="Enter Code" data-lang-fa="کد را وارد کنید" data-lang-kr="کۆدەکە داخڵ بکە">کۆدەکە داخڵ بکە</h4>
-            <input type="text" id="enterCode" placeholder="کۆدەکە داخڵ بکە">
-            <button onclick="enterShareCode()" data-lang-en="Confirm" data-lang-fa="تأیید" data-lang-kr="پشتڕاستکردنەوە">پشتڕاستکردنەوە</button>
-        </div>
+        <h4
+          data-lang-en="Enter Code"
+          data-lang-fa="کد را وارد کنید"
+          data-lang-kr="کۆدەکە داخڵ بکە"
+        >
+          کۆدەکە داخڵ بکە
+        </h4>
+        <input type="text" id="enterCode" placeholder="کۆدەکە داخڵ بکە" />
+        <button
+          onclick="enterShareCode()"
+          data-lang-en="Confirm"
+          data-lang-fa="تأیید"
+          data-lang-kr="پشتڕاستکردنەوە"
+        >
+          پشتڕاستکردنەوە
+        </button>
+      </div>
     </div>
 
     <script>
-        const dbPath = 'server/list';
-        const numberOfSongs = 631;
-        const audio = new Audio();
-        const savedVolume = localStorage.getItem('popupVolume');
-        const savedLanguage = localStorage.getItem('selectedLanguage') || 'kr';
-        let currentSong = null;
-        let isPlaying = false;
-        let playlist = makePlaylist();
-        let history = [];
-        let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
-        let selectedLanguage = 'kr';
+      const dbPath = "server/list";
+      const numberOfSongs = 631;
+      const audio = new Audio();
+      const savedVolume = localStorage.getItem("popupVolume");
+      const savedLanguage = localStorage.getItem("selectedLanguage") || "kr";
+      let currentSong = null;
+      let isPlaying = false;
+      let playlist = makePlaylist();
+      let history = [];
+      let likedSongs = JSON.parse(localStorage.getItem("likedSongs")) || [];
+      let selectedLanguage = "kr";
 
-        function makePlaylist() {
-            const list = new Set();
-            while (list.size < numberOfSongs) {
-                list.add(Math.floor(Math.random() * numberOfSongs));
-            }
-            return Array.from(list);
+      function makePlaylist() {
+        const list = new Set();
+        while (list.size < numberOfSongs) {
+          list.add(Math.floor(Math.random() * numberOfSongs));
         }
+        return Array.from(list);
+      }
 
-        function loadSong(songId) {
-            currentSong = songId;
-            fetch(`${dbPath}/${songId}`)
-                .then(response => response.text())
-                .then(data => {
-                    const meta = data.split('\n\n');
-                    document.getElementById('songTitle').textContent = meta[1];
-                    document.getElementById('artistName').textContent = meta[0];
-                    document.getElementById('time').textContent = '0:00 / 0:00';
-                    audio.src = meta[2];
-                    audio.play().catch(error => {
-                        console.error("Playback failed:", error);
-                    });
-                    isPlaying = true;
-                    updateProgress();
-                    updateLikeIcon();
-
-                    if ('mediaSession' in navigator) {
-                        navigator.mediaSession.metadata = new MediaMetadata({
-                            title: meta[1],
-                            artist: meta[0],
-                            artwork: [
-                                { src: 'client/logo.png', sizes: '96x96', type: 'image/png' }
-                            ]
-                        });
-                    }
-                });
-        }
-
-        function togglePlay() {
-            if (audio.paused) {
-                audio.play().catch(error => {console.error("Playback failed:", error);});
-                isPlaying = true;
-            } else {
-                audio.pause();
-                isPlaying = false;
-            }
-        }
-
-        function prevSong() {
-            if (history.length > 1) {
-                history.pop();
-                const prevSong = history[history.length - 1];
-                loadSong(prevSong);
-            }
-        }
-
-        function nextSong() {
-            const nextSong = playlist[Math.floor(Math.random() * playlist.length)];
-            loadSong(nextSong);
-        }
-
-        function toggleLike() {
-            if (currentSong) {
-                const index = likedSongs.indexOf(currentSong);
-                if (index === -1) {
-                    likedSongs.push(currentSong);
-                } else {
-                    likedSongs.splice(index, 1);
-                }
-                localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
-                updateLikedSongs();
-                updateLikeIcon();
-            }
-        }
-
-        function toggleSharePanel() {
-            const panel = document.getElementById('sharePanel');
-            if (panel.style.display === 'block') {
-                panel.style.transform = 'translate(-50%, -50%) scale(0)';
-                setTimeout(() => {
-                    panel.style.display = 'none';
-                }, 300);
-            } else {
-                panel.style.display = 'block';
-                setTimeout(() => {
-                    panel.style.transform = 'translate(-50%, -50%) scale(1)';
-                }, 10);
-            }
-        }
-
-        function generateShareCode() {
-            const code = likedSongs.join(',');
-            document.getElementById('shareCode').value = code;
-
-            const generateShareCodeMessages = {
-                kr: "کۆدی نوێی هاوبەشکردن دروست کرا!",
-                en: "New Share code created!",
-                fa: "کد اشتراک‌گذاری جدید ایجاد شد!"
-            };
-
-            const currentgenerateShareCodeMessage = generateShareCodeMessages[selectedLanguage];
-            if (currentgenerateShareCodeMessage) {
-                showNotif(currentgenerateShareCodeMessage, 'success');
-            }
-        }
-
-        function copyShareCode() {
-            const shareCodeInput = document.getElementById('shareCode');
-            shareCodeInput.select();
-            document.execCommand('copy');
-
-            const copyShareCodeMessages = {
-                kr: "کۆدەکە کۆپی کرا!",
-                en: "Code copied!",
-                fa: "کد کپی شد!"
-            };
-
-            const currentcopyShareCodeMessage = copyShareCodeMessages[selectedLanguage];
-            if (currentcopyShareCodeMessage) {
-                showNotif(currentcopyShareCodeMessage, 'success');
-            }
-        }
-
-        function enterShareCode() {
-            const code = document.getElementById('enterCode').value.trim();
-
-            const enterShareCodesuccessMessages = {
-                kr: "کۆدەکان بە سەرکەوتوویی داخڵ کرا!",
-                en: "Code entered successfully!",
-                fa: "کد با موفقیت وارد شد!"
-            };
-
-            const enterShareCodeerrorMessages = {
-                kr: "تکایە کۆدێکی دروست بنووسە!",
-                en: "Please enter a valid code!",
-                fa: "لطفاً یک کد معتبر وارد کنید!"
-            };
-
-            const successMessage = enterShareCodesuccessMessages[selectedLanguage];
-            const errorMessage = enterShareCodeerrorMessages[selectedLanguage];
-
-            if (code) {
-                const songIds = code.split(',').map(id => id.trim());
-                songIds.forEach(id => {
-                    if (!isNaN(id) && id >= 0 && id < numberOfSongs && !likedSongs.includes(id)) {
-                        likedSongs.push(id);
-                    }
-                });
-                localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
-                updateLikedSongs();
-
-                if (successMessage) {
-                    showNotif(successMessage, 'success');
-                }
-            } else {
-                if (errorMessage) {
-                    showNotif(errorMessage, 'success');
-                }
-            }
-        }
-
-        function updateLikeIcon() {
-            const likeIcon = document.getElementById('likeIcon');
-            if (likedSongs.includes(currentSong)) {
-                likeIcon.classList.remove('far', 'fa-heart');
-                likeIcon.classList.add('fas', 'fa-heart');
-            } else {
-                likeIcon.classList.remove('fas', 'fa-heart');
-                likeIcon.classList.add('far', 'fa-heart');
-            }
-        }
-
-        function updateLikedSongs() {
-            const list = document.querySelector('#likedSongs .song-list');
-            list.innerHTML = '';
-            likedSongs.forEach(songId => {
-                fetch(`${dbPath}/${songId}`)
-                    .then(response => response.text())
-                    .then(data => {
-                        const meta = data.split('\n\n');
-                        const item = document.createElement('div');
-                        item.className = 'song-item';
-                        item.textContent = "گۆرانی " + meta[1] + " - " + meta[0];
-                        item.onclick = () => loadSong(songId);
-                        list.appendChild(item);
-                    });
+      function loadSong(songId) {
+        currentSong = songId;
+        fetch(`${dbPath}/${songId}`)
+          .then((response) => response.text())
+          .then((data) => {
+            const meta = data.split("\n\n");
+            document.getElementById("songTitle").textContent = meta[1];
+            document.getElementById("artistName").textContent = meta[0];
+            document.getElementById("time").textContent = "0:00 / 0:00";
+            audio.src = meta[2];
+            audio.play().catch((error) => {
+              console.error("Playback failed:", error);
             });
-        }
+            isPlaying = true;
+            updateProgress();
+            updateLikeIcon();
 
-        function updateProgress() {
-            const duration = audio.duration;
-            const currentTime = audio.currentTime;
-            const percent = duration ? (currentTime / duration) * 100 : 0;
-            document.getElementById('progress').value = percent;
-            document.getElementById('time').textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
-            document.getElementById('progress').disabled = false;
-        }
-
-        function setVolume(value) {
-            audio.volume = value;
-            localStorage.setItem('popupVolume', value); // Save volume to localStorage
-        }
-
-        function formatTime(time) {
-            const minutes = Math.floor(time / 60);
-            const seconds = Math.floor(time % 60);
-            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-
-        document.getElementById('progress').addEventListener('input', (e) => {
-            const percent = e.target.value;
-            if (audio.duration) {
-                audio.currentTime = (audio.duration * percent) / 100;
+            if ("mediaSession" in navigator) {
+              navigator.mediaSession.metadata = new MediaMetadata({
+                title: meta[1],
+                artist: meta[0],
+                artwork: [
+                  { src: "client/logo.png", sizes: "96x96", type: "image/png" },
+                ],
+              });
             }
+          });
+      }
+
+      function togglePlay() {
+        if (audio.paused) {
+          audio.play().catch((error) => {
+            console.error("Playback failed:", error);
+          });
+          isPlaying = true;
+        } else {
+          audio.pause();
+          isPlaying = false;
+        }
+      }
+
+      function prevSong() {
+        if (history.length > 1) {
+          history.pop();
+          const prevSong = history[history.length - 1];
+          loadSong(prevSong);
+        }
+      }
+
+      function nextSong() {
+        const nextSong = playlist[Math.floor(Math.random() * playlist.length)];
+        loadSong(nextSong);
+      }
+
+      function toggleLike() {
+        if (currentSong) {
+          const index = likedSongs.indexOf(currentSong);
+          if (index === -1) {
+            likedSongs.push(currentSong);
+          } else {
+            likedSongs.splice(index, 1);
+          }
+          localStorage.setItem("likedSongs", JSON.stringify(likedSongs));
+          updateLikedSongs();
+          updateLikeIcon();
+        }
+      }
+
+      function toggleSharePanel() {
+        const panel = document.getElementById("sharePanel");
+        if (panel.style.display === "block") {
+          panel.style.transform = "translate(-50%, -50%) scale(0)";
+          setTimeout(() => {
+            panel.style.display = "none";
+          }, 300);
+        } else {
+          panel.style.display = "block";
+          setTimeout(() => {
+            panel.style.transform = "translate(-50%, -50%) scale(1)";
+          }, 10);
+        }
+      }
+
+      function generateShareCode() {
+        const code = likedSongs.join(",");
+        document.getElementById("shareCode").value = code;
+
+        const generateShareCodeMessages = {
+          kr: "کۆدی نوێی هاوبەشکردن دروست کرا!",
+          en: "New Share code created!",
+          fa: "کد اشتراک‌گذاری جدید ایجاد شد!",
+        };
+
+        const currentgenerateShareCodeMessage =
+          generateShareCodeMessages[selectedLanguage];
+        if (currentgenerateShareCodeMessage) {
+          showNotif(currentgenerateShareCodeMessage, "success");
+        }
+      }
+
+      function copyShareCode() {
+        const shareCodeInput = document.getElementById("shareCode");
+        shareCodeInput.select();
+        document.execCommand("copy");
+
+        const copyShareCodeMessages = {
+          kr: "کۆدەکە کۆپی کرا!",
+          en: "Code copied!",
+          fa: "کد کپی شد!",
+        };
+
+        const currentcopyShareCodeMessage =
+          copyShareCodeMessages[selectedLanguage];
+        if (currentcopyShareCodeMessage) {
+          showNotif(currentcopyShareCodeMessage, "success");
+        }
+      }
+
+      function enterShareCode() {
+        const code = document.getElementById("enterCode").value.trim();
+
+        const enterShareCodesuccessMessages = {
+          kr: "کۆدەکان بە سەرکەوتوویی داخڵ کرا!",
+          en: "Code entered successfully!",
+          fa: "کد با موفقیت وارد شد!",
+        };
+
+        const enterShareCodeerrorMessages = {
+          kr: "تکایە کۆدێکی دروست بنووسە!",
+          en: "Please enter a valid code!",
+          fa: "لطفاً یک کد معتبر وارد کنید!",
+        };
+
+        const successMessage = enterShareCodesuccessMessages[selectedLanguage];
+        const errorMessage = enterShareCodeerrorMessages[selectedLanguage];
+
+        if (code) {
+          const songIds = code.split(",").map((id) => id.trim());
+          songIds.forEach((id) => {
+            if (
+              !isNaN(id) &&
+              id >= 0 &&
+              id < numberOfSongs &&
+              !likedSongs.includes(id)
+            ) {
+              likedSongs.push(id);
+            }
+          });
+          localStorage.setItem("likedSongs", JSON.stringify(likedSongs));
+          updateLikedSongs();
+
+          if (successMessage) {
+            showNotif(successMessage, "success");
+          }
+        } else {
+          if (errorMessage) {
+            showNotif(errorMessage, "success");
+          }
+        }
+      }
+
+      function updateLikeIcon() {
+        const likeIcon = document.getElementById("likeIcon");
+        if (likedSongs.includes(currentSong)) {
+          likeIcon.classList.remove("far", "fa-heart");
+          likeIcon.classList.add("fas", "fa-heart");
+        } else {
+          likeIcon.classList.remove("fas", "fa-heart");
+          likeIcon.classList.add("far", "fa-heart");
+        }
+      }
+
+      function updateLikedSongs() {
+        const list = document.querySelector("#likedSongs .song-list");
+        list.innerHTML = "";
+        likedSongs.forEach((songId) => {
+          fetch(`${dbPath}/${songId}`)
+            .then((response) => response.text())
+            .then((data) => {
+              const meta = data.split("\n\n");
+              const item = document.createElement("div");
+              item.className = "song-item";
+              item.textContent = "گۆرانی " + meta[1] + " - " + meta[0];
+              item.onclick = () => loadSong(songId);
+              list.appendChild(item);
+            });
         });
+      }
 
-        audio.ontimeupdate = updateProgress;
-        audio.onended = nextSong;
+      function updateProgress() {
+        const duration = audio.duration;
+        const currentTime = audio.currentTime;
+        const percent = duration ? (currentTime / duration) * 100 : 0;
+        document.getElementById("progress").value = percent;
+        document.getElementById("time").textContent = `${formatTime(
+          currentTime
+        )} / ${formatTime(duration)}`;
+        document.getElementById("progress").disabled = false;
+      }
 
-        if ('mediaSession' in navigator) {
-            navigator.mediaSession.setActionHandler('play', togglePlay);
-            navigator.mediaSession.setActionHandler('pause', togglePlay);
-            navigator.mediaSession.setActionHandler('previoustrack', prevSong);
-            navigator.mediaSession.setActionHandler('nexttrack', nextSong);
+      function setVolume(value) {
+        audio.volume = value;
+        localStorage.setItem("popupVolume", value); // Save volume to localStorage
+      }
+
+      function formatTime(time) {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+      }
+
+      document.getElementById("progress").addEventListener("input", (e) => {
+        const percent = e.target.value;
+        if (audio.duration) {
+          audio.currentTime = (audio.duration * percent) / 100;
         }
+      });
 
-        window.addEventListener('load', () => {
-            if (savedVolume) {
-                document.getElementById('popupVolume').value = savedVolume;
-                setVolume(savedVolume);
-            }
-            document.getElementById('playBtn').addEventListener('click', () => {
-                if (!isPlaying && currentSong === null) {
-                    loadSong(playlist[0]);
-                } else {
-                    togglePlay();
-                }
-            });
-            updateLikedSongs();
-            switchLanguage(savedLanguage);
-            generateShareCode();
+      audio.ontimeupdate = updateProgress;
+      audio.onended = nextSong;
 
-            if (savedVolume != audio.volume) {
-                setVolume(savedVolume);
-            }
+      if ("mediaSession" in navigator) {
+        navigator.mediaSession.setActionHandler("play", togglePlay);
+        navigator.mediaSession.setActionHandler("pause", togglePlay);
+        navigator.mediaSession.setActionHandler("previoustrack", prevSong);
+        navigator.mediaSession.setActionHandler("nexttrack", nextSong);
+      }
+
+      window.addEventListener("load", () => {
+        if (savedVolume) {
+          document.getElementById("popupVolume").value = savedVolume;
+          setVolume(savedVolume);
+        }
+        document.getElementById("playBtn").addEventListener("click", () => {
+          if (!isPlaying && currentSong === null) {
+            loadSong(playlist[0]);
+          } else {
+            togglePlay();
+          }
         });
+        updateLikedSongs();
+        switchLanguage(savedLanguage);
+        generateShareCode();
 
-        // TODO: Add event listener for space key to play music
+        if (savedVolume != audio.volume) {
+          setVolume(savedVolume);
+        }
+      });
 
-        function toggleVolumePopup() {
-            const popup = document.getElementById('volumePopup');
-            if (popup.style.display === 'block') {
-                popup.style.transform = 'translate(-50%, -50%) scale(0)';
-                setTimeout(() => {
-                    popup.style.display = 'none';
-                }, 300);
-            } else {
-                popup.style.display = 'block';
-                setTimeout(() => {
-                    popup.style.transform = 'translate(-50%, -50%) scale(1)';
-                }, 10);
-            }
+      // TODO: Add event listener for space key to play music
+
+      function toggleVolumePopup() {
+        const popup = document.getElementById("volumePopup");
+        if (popup.style.display === "block") {
+          popup.style.transform = "translate(-50%, -50%) scale(0)";
+          setTimeout(() => {
+            popup.style.display = "none";
+          }, 300);
+        } else {
+          popup.style.display = "block";
+          setTimeout(() => {
+            popup.style.transform = "translate(-50%, -50%) scale(1)";
+          }, 10);
+        }
+      }
+
+      function switchLanguage(lang) {
+        const elements = document.querySelectorAll("[data-lang-" + lang + "]");
+        selectedLanguage = lang;
+        localStorage.setItem("selectedLanguage", lang);
+        document.getElementById("languageSelect").value = lang;
+        const languageMessages = {
+          kr: "زمان گۆڕا بۆ کوردی",
+          en: "Language changed to English",
+          fa: "زبان به فارسی تغییر کرد",
+        };
+
+        const currentLangMessage = languageMessages[lang];
+        if (currentLangMessage) {
+          showNotif(currentLangMessage, "info");
         }
 
-        function switchLanguage(lang) {
-            const elements = document.querySelectorAll('[data-lang-' + lang + ']');
-            selectedLanguage = lang;
-            localStorage.setItem('selectedLanguage', lang);
-            document.getElementById('languageSelect').value = lang;
-            const languageMessages = {
-                kr: "زمان گۆڕا بۆ کوردی",
-                en: "Language changed to English",
-                fa: "زبان به فارسی تغییر کرد"
-            };
+        elements.forEach((element) => {
+          element.textContent = element.getAttribute("data-lang-" + lang);
+        });
+      }
 
-            const currentLangMessage = languageMessages[lang];
-            if (currentLangMessage) {
-                showNotif(currentLangMessage, 'info');
-            }
+      function showNotif(message, type) {
+        const notif = document.createElement("div");
+        notif.className = "notif " + (type || "info");
+        notif.setAttribute("data-lang", selectedLanguage);
+        notif.style.opacity = "0.97";
 
-            elements.forEach(element => {
-                element.textContent = element.getAttribute('data-lang-' + lang);
-            });
+        // Icon
+        const icon = document.createElement("span");
+        icon.className = "notif-icon";
+        if (type === "success")
+          icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+        else if (type === "error")
+          icon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+        else icon.innerHTML = '<i class="fas fa-info-circle"></i>';
+        notif.appendChild(icon);
+
+        // Message
+        const msg = document.createElement("span");
+        msg.textContent = message;
+        notif.appendChild(msg);
+
+        // Close button
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "notif-close";
+        closeBtn.innerHTML = "&times;";
+        closeBtn.onclick = () => removeNotif(notif);
+        notif.appendChild(closeBtn);
+
+        // Progress bar
+        const progress = document.createElement("div");
+        progress.className = "notif-progress";
+        const progressBar = document.createElement("div");
+        progressBar.className = "notif-progress-bar";
+        progress.appendChild(progressBar);
+        notif.appendChild(progress);
+
+        // Stack notifications
+        const notifs = document.querySelectorAll(".notif");
+        let bottom = 20;
+        notifs.forEach((n) => {
+          const nRect = n.getBoundingClientRect();
+          bottom += nRect.height + 12;
+        });
+        notif.style.bottom = `${bottom}px`;
+
+        document.body.appendChild(notif);
+
+        // Animate progress bar
+        setTimeout(() => {
+          progressBar.style.transition = "width 5s linear";
+          progressBar.style.width = "100%";
+        }, 10);
+
+        // Remove after 5s
+        const timeout = setTimeout(() => removeNotif(notif), 5000);
+        notif._notifTimeout = timeout;
+      }
+
+      function removeNotif(notif) {
+        if (!notif) return;
+        clearTimeout(notif._notifTimeout);
+        notif.style.opacity = "0";
+        notif.style.transform = "translateY(40px) scale(0.95)";
+        setTimeout(() => {
+          notif.remove();
+          updateNotifPositions();
+        }, 400);
+      }
+
+      function updateNotifPositions() {
+        const notifs = Array.from(document.querySelectorAll(".notif"));
+        let bottom = 20;
+        notifs.forEach((n) => {
+          const prevBottom = parseFloat(n.style.bottom) || 0;
+          n.style.bottom = `${bottom}px`;
+          bottom += n.getBoundingClientRect().height + 12;
+        });
+      }
+
+      function toggleSongList() {
+        const songList = document.querySelector(".song-list");
+        const toggleIcon = document.getElementById("toggleIcon");
+        const more = document.getElementById("more");
+        if (songList.style.display === "none") {
+          songList.style.display = "block";
+          more.style.display = "none";
+          toggleIcon.innerHTML = "keyboard_arrow_down";
+        } else {
+          songList.style.display = "none";
+          more.style.display = "block";
+          toggleIcon.innerHTML = "keyboard_arrow_right";
         }
-
-        function showNotif(message, type) {
-            const notif = document.createElement('div');
-            notif.className = 'notif ' + (type || 'info');
-            notif.setAttribute('data-lang', selectedLanguage);
-            notif.style.opacity = '0.97';
-
-            // Icon
-            const icon = document.createElement('span');
-            icon.className = 'notif-icon';
-            if (type === 'success') icon.innerHTML = '<i class="fas fa-check-circle"></i>';
-            else if (type === 'error') icon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
-            else icon.innerHTML = '<i class="fas fa-info-circle"></i>';
-            notif.appendChild(icon);
-
-            // Message
-            const msg = document.createElement('span');
-            msg.textContent = message;
-            notif.appendChild(msg);
-
-            // Close button
-            const closeBtn = document.createElement('button');
-            closeBtn.className = 'notif-close';
-            closeBtn.innerHTML = '&times;';
-            closeBtn.onclick = () => removeNotif(notif);
-            notif.appendChild(closeBtn);
-
-            // Progress bar
-            const progress = document.createElement('div');
-            progress.className = 'notif-progress';
-            const progressBar = document.createElement('div');
-            progressBar.className = 'notif-progress-bar';
-            progress.appendChild(progressBar);
-            notif.appendChild(progress);
-
-            // Stack notifications
-            const notifs = document.querySelectorAll('.notif');
-            let bottom = 20;
-            notifs.forEach(n => {
-                const nRect = n.getBoundingClientRect();
-                bottom += nRect.height + 12;
-            });
-            notif.style.bottom = `${bottom}px`;
-
-            document.body.appendChild(notif);
-
-            // Animate progress bar
-            setTimeout(() => {
-                progressBar.style.transition = 'width 5s linear';
-                progressBar.style.width = '100%';
-            }, 10);
-
-            // Remove after 5s
-            const timeout = setTimeout(() => removeNotif(notif), 5000);
-            notif._notifTimeout = timeout;
-        }
-
-        function removeNotif(notif) {
-            if (!notif) return;
-            clearTimeout(notif._notifTimeout);
-            notif.style.opacity = '0';
-            notif.style.transform = 'translateY(40px) scale(0.95)';
-            setTimeout(() => {
-                notif.remove();
-                updateNotifPositions();
-            }, 400);
-        }
-
-        function updateNotifPositions() {
-            const notifs = Array.from(document.querySelectorAll('.notif'));
-            let bottom = 20;
-            notifs.forEach(n => {
-                // موقعیت قبلی را ذخیره کن
-                const prevBottom = parseFloat(n.style.bottom) || 0;
-                // موقعیت جدید را محاسبه کن
-                n.style.bottom = `${bottom}px`;
-                // اگر اختلاف زیاد بود، با transition حرکت کند
-                // (در عمل، transition: bottom فعال است و حرکت نرم انجام می‌شود)
-                bottom += n.getBoundingClientRect().height + 12;
-            });
-        }
-
-        function toggleSongList() {
-                const songList = document.querySelector('.song-list');
-                const toggleIcon = document.getElementById('toggleIcon');
-                const more = document.getElementById('more');
-                if (songList.style.display === 'none') {
-                    songList.style.display = 'block';
-                    more.style.display = 'none';
-                    toggleIcon.innerHTML = 'keyboard_arrow_down';
-                } else {
-                    songList.style.display = 'none';
-                    more.style.display = 'block';
-                    toggleIcon.innerHTML = 'keyboard_arrow_right';
-                }
-        }
+      }
     </script>
-</body>
+  </body>
 </html>
